@@ -1,0 +1,136 @@
+{
+  "placeholderImages": [
+    {
+      "id": "hero-main",
+      "description": "Luxurious hero image showing a sophisticated product arrangement.",
+      "imageUrl": "/istockphoto-1054282608-1024x1024.jpg",
+      "imageHint": "luxury lifestyle"
+    },
+    {
+      "id": "product-1",
+      "description": "Product 1 image",
+      "imageUrl": "/abo2.jpg",
+      "imageHint": "product bottle"
+    },
+    {
+      "id": "product-2",
+      "description": "Product 2 image",
+      "imageUrl": "/abo7.jpg",
+      "imageHint": "product package"
+    },
+    {
+      "id": "product-3",
+      "description": "Product 3 image",
+      "imageUrl": "/abo8.jpg",
+      "imageHint": "serum bottle"
+    },
+    {
+      "id": "product-4",
+      "description": "Product 4 image",
+      "imageUrl": "/hana.jpg",
+      "imageHint": "cosmetic cream"
+    },
+    {
+      "id": "product-5",
+      "description": "Product 5 image",
+      "imageUrl": "/hana (2).jpg",
+      "imageHint": "luxury oil"
+    },
+    {
+      "id": "product-6",
+      "description": "Product 6 image",
+      "imageUrl": "/hana(3).jpg",
+      "imageHint": "men's grooming"
+    },
+    {
+      "id": "product-7",
+      "description": "Product 7 image",
+      "imageUrl": "/hana(4).jpg",
+      "imageHint": "health supplement"
+    },
+    {
+      "id": "product-8",
+      "description": "Product 8 image",
+      "imageUrl": "/hana(5).jpg",
+      "imageHint": "premium elixir"
+    },
+    {
+      "id": "avatar-1",
+      "description": "Avatar for customer review 1",
+      "imageUrl": "/mah.jpg",
+      "imageHint": "man portrait"
+    },
+    {
+      "id": "avatar-2",
+      "description": "Avatar for customer review 2",
+      "imageUrl": "/mah2.jpg",
+      "imageHint": "man profile"
+    },
+    {
+      "id": "avatar-3",
+      "description": "Avatar for customer review 3",
+      "imageUrl": "/mah3.jpg",
+      "imageHint": "smiling man"
+    },
+    {
+      "id": "avatar-4",
+      "description": "Avatar for customer review 4",
+      "imageUrl": "/mah.jpg",
+      "imageHint": "man portrait"
+    },
+    {
+      "id": "avatar-5",
+      "description": "Avatar for customer review 5",
+      "imageUrl": "/mah2.jpg",
+      "imageHint": "man profile"
+    },
+    {
+      "id": "avatar-6",
+      "description": "Avatar for customer review 6",
+      "imageUrl": "/mah3.jpg",
+      "imageHint": "smiling man"
+    },
+    {
+      "id": "avatar-7",
+      "description": "Avatar for customer review 7",
+      "imageUrl": "/mah.jpg",
+      "imageHint": "man portrait"
+    },
+    {
+      "id": "gallery-1",
+      "description": "Gallery image 1",
+      "imageUrl": "https://images.unsplash.com/photo-1565530557873-14ab8a68a85b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxwcm9kdWN0JTIwZGV0YWlsfGVufDB8fHx8MTc2MzY1Mjc4OHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "product detail"
+    },
+    {
+      "id": "gallery-2",
+      "description": "Gallery image 2",
+      "imageUrl": "https://images.unsplash.com/photo-1657235895153-86205d8b9b72?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxwcm9kdWN0JTIwdGV4dHVyZXxlbnwwfHx8fDE3NjM2MDc5MDJ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "product texture"
+    },
+    {
+      "id": "gallery-3",
+      "description": "Gallery image 3",
+      "imageUrl": "https://images.unsplash.com/photo-1605773741569-82c873397784?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxsaWZlc3R5bGUlMjBzaG90fGVufDB8fHx8MTc2MzU4MjQ2Nnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "lifestyle shot"
+    },
+    {
+      "id": "gallery-4",
+      "description": "Gallery image 4",
+      "imageUrl": "https://images.unsplash.com/photo-1559087316-47ce212113b7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxwYWNrYWdpbmd8ZW58MHx8fHwxNzYzNjk1Mzk5fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "packaging"
+    },
+    {
+      "id": "gallery-5",
+      "description": "Gallery image 5",
+      "imageUrl": "https://images.unsplash.com/photo-1701252374756-ed5ced2457dc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxwcm9kdWN0JTIwdXNlfGVufDB8fHx8MTc2MzY5NTM5OXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "product use"
+    },
+    {
+      "id": "gallery-6",
+      "description": "Gallery image 6",
+      "imageUrl": "https://images.unsplash.com/photo-1506368249639-73a05d6f6488?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxpbmdyZWRpZW50c3xlbnwwfHx8fDE3NjM2OTUzOTl8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "ingredients"
+    }
+  ]
+}
