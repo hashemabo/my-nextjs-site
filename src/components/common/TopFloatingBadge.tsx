@@ -15,66 +15,67 @@ export default function TopFloatingBadge() {
     return () => clearInterval(interval);
   }, []);
 
-  // الإخفاء عند التمرير
+  // إظهار وإخفاء عند التمرير
   useEffect(() => {
     let lastY = window.scrollY;
-
     const handleScroll = () => {
       const currentY = window.scrollY;
       setVisible(currentY <= lastY || currentY < 100);
       lastY = currentY;
     };
-
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   return (
     <div
-      className={`fixed top-6 right-6 z-50 transition-all duration-500 
-      ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-20'}
-      `}
+      className={`fixed left-3 top-1/2 -translate-y-1/2 z-50 
+      transition-all duration-500
+      ${visible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'}
+    `}
     >
-      <div className={`
-        bg-gradient-to-br from-black/80 to-gray-900/90 
-        backdrop-blur-xl text-white rounded-xl 
-        shadow-2xl border border-white/20 
-        p-5 flex flex-col gap-3 w-56
-        transition-all duration-500
-        ${isGlowing ? 'shadow-green-500/30' : 'shadow-blue-500/30'}
-        hover:scale-105
-      `}>
-        
-        {/* البنود الأساسية */}
-        <div className="flex items-center gap-3">
-          <Gift className="w-5 h-5 text-green-400 flex-shrink-0" />
+      <div
+        className={`
+          bg-gradient-to-br from-black/80 to-gray-900/90
+          backdrop-blur-xl text-white rounded-xl
+          shadow-2xl border border-white/20
+          p-3 flex flex-col gap-3
+          w-40   /* ← أرفع */
+          transition-all duration-500
+          ${isGlowing ? 'shadow-green-500/30' : 'shadow-blue-500/30'}
+          hover:scale-105
+        `}
+      >
+
+        <div className="flex items-center gap-2">
+          <Gift className="w-5 h-5 text-green-400" />
           <div>
-            <p className="font-bold text-white text-sm">الشحن مجاني</p>
-            <p className="text-xs text-green-300">لجميع الطلبات</p>
+            <p className="font-bold text-xs text-white">الشحن مجاني</p>
+            <p className="text-[10px] text-green-300">لجميع الطلبات</p>
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
-          <Truck className="w-5 h-5 text-blue-400 flex-shrink-0" />
+        <div className="flex items-center gap-2">
+          <Truck className="w-5 h-5 text-blue-400" />
           <div>
-            <p className="font-bold text-white text-sm">الشحن داخل الخليج</p>
-            <p className="text-xs text-blue-300">توصيل سريع</p>
+            <p className="font-bold text-xs text-white">الشحن داخل الخليج</p>
+            <p className="text-[10px] text-blue-300">توصيل سريع</p>
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
-          <BadgeCheck className="w-5 h-5 text-purple-400 flex-shrink-0" />
+        <div className="flex items-center gap-2">
+          <BadgeCheck className="w-5 h-5 text-purple-400" />
           <div>
-            <p className="font-bold text-white text-sm">منتجات أصلية</p>
-            <p className="text-xs text-purple-300">ضمان الجودة</p>
+            <p className="font-bold text-xs text-white">منتجات أصلية</p>
+            <p className="text-[10px] text-purple-300">ضمان الجودة</p>
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
-          <Clock className="w-5 h-5 text-yellow-400 flex-shrink-0" />
+        <div className="flex items-center gap-2">
+          <Clock className="w-5 h-5 text-yellow-400" />
           <div>
-            <p className="font-bold text-white text-sm">توصيل سريع</p>
-            <p className="text-xs text-yellow-300">24-48 ساعة</p>
+            <p className="font-bold text-xs text-white">توصيل سريع</p>
+            <p className="text-[10px] text-yellow-300">24-48 ساعة</p>
           </div>
         </div>
 

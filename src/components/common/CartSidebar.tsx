@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useState } from 'react';
@@ -138,7 +137,7 @@ const CartSidebar: React.FC<CartSidebarProps> = ({ dealProduct }) => {
     message += `الإجمالي: ${subtotalSAR.toFixed(2)} ريال`;
 
     const encodedMessage = encodeURIComponent(message);
-    const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodedMessage}`;
+    const whatsappUrl = `https://wa.me/${966572033884}?text=${encodedMessage}`;
     
     toast({ title: t('formSuccess') });
     window.open(whatsappUrl, '_blank');
@@ -342,3 +341,13 @@ const CartSidebar: React.FC<CartSidebarProps> = ({ dealProduct }) => {
 };
 
 export default CartSidebar;
+
+
+
+
+
+
+
+
+
+

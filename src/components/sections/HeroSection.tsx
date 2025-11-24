@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
@@ -15,25 +15,43 @@ interface HeroSectionProps {
 const HeroSection: React.FC<HeroSectionProps> = () => {
   const heroImage = PlaceHolderImages.find(p => p.id === 'hero-main');
 
+  const [offset, setOffset] = useState(0);
+
+  useEffect(() => {
+    const onScroll = () => setOffset(window.scrollY * 0.25);
+    window.addEventListener('scroll', onScroll);
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
   const scrollToProducts = () => {
     document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
-    <section className="relative h-[80vh] min-h-[600px] w-full flex items-center justify-center text-center text-white p-0">
+    <section className="relative h-[80vh] min-h-[600px] w-full flex items-center justify-center text-center text-white p-0 overflow-hidden">
+
+      {/* Parallax Background */}
       {heroImage && (
-        <Image
-          src={heroImage.imageUrl}
-          alt={heroImage.description}
-          fill
-          priority
-          className="object-cover scale-105 brightness-[0.55]"
-          data-ai-hint={heroImage.imageHint}
-        />
+        <div
+          className="absolute inset-0"
+          style={{
+            transform: `translateY(${offset}px) scale(1.15)`,
+            transition: "transform 0.1s linear"
+          }}
+        >
+          <Image
+            src={heroImage.imageUrl}
+            alt={heroImage.description}
+            fill
+            priority
+            className="object-cover brightness-[0.55]"
+            data-ai-hint={heroImage.imageHint}
+          />
+        </div>
       )}
 
       {/* Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/60 to-black/40" />
+      <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-black/60" />
 
       {/* Content */}
       <div className="relative z-10 container mx-auto px-4 md:px-6 max-w-4xl">
@@ -42,7 +60,7 @@ const HeroSection: React.FC<HeroSectionProps> = () => {
           <span className="text-accent block mt-2">واجعل حضورك لا يُنسى</span>
         </h1>
 
-        <p className="mt-4 text-lg md:text-xl text-white/90 max-w-2xl mx-auto animate-fade-in-up">
+        <p className="mt-4 text-lg md:text-xl text-white/90 max-w-2xl mx-auto animate-fade-in-up whitespace-pre-line">
 أقوى المنتجات الرجالية الأصلية في مكان واحد
 ✔ كريمات للانتصاب
 ✔ كريمات للتأخير
@@ -53,7 +71,8 @@ const HeroSection: React.FC<HeroSectionProps> = () => {
 ⭐️ نتائج سريعة
 ✔ جودة مضمونة
 ✔ توصيل سريع لجميع الدول
-أفضل الكريمات الرجالية الأصلية – نتائج مضمونة وجودة عالية        </p>
+أفضل الكريمات الرجالية الأصلية – نتائج مضمونة وجودة عالية
+        </p>
 
         <Button
           size="lg"

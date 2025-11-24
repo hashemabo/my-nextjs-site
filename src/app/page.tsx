@@ -18,11 +18,18 @@ import ScrollToTopButton from '@/components/common/ScrollToTopButton';
 import CartSidebar from '@/components/common/CartSidebar';
 import DealPopup from '@/components/common/DealPopup';
 
-// ⭐ البنر الجانبي الجديد
+// ⭐ البنر الجانبي
 import SideBannerRecommendations from "@/components/sections/SideBannerRecommendations";
 
-// ⭐ البنر الدائري العلوي الجديد
+// ⭐ البنر الدائري العلوي
 import TopFloatingBadge from "@/components/common/TopFloatingBadge";
+
+// ⭐ قسم لماذا تختارنا الجديد
+import WhyChooseUs from "@/components/sections/WhyChooseUs";
+
+// ⭐ فقّاعة تتبع الماوس / اللمس
+import MouseFollowerBubble from "@/components/common/MouseFollowerBubble";
+
 
 export default function Home() {
   const { language, dir } = useLanguage();
@@ -87,7 +94,10 @@ export default function Home() {
 
       <Header {...headerProps} />
 
-      {/* ⭐ البنر الدائري الجديد */}
+      {/* ⭐ فقّاعة تتبع الماوس */}
+      <MouseFollowerBubble />
+
+      {/* ⭐ البنر العلوي */}
       <TopFloatingBadge />
 
       {/* ⭐ البنر الجانبي */}
@@ -97,6 +107,7 @@ export default function Home() {
         <HeroSection {...heroProps} />
         <RecommendedProductsSection />
         <FeaturesSection />
+
         <ReviewsSection />
         <GuaranteeSection />
         <FaqSection />
