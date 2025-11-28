@@ -11,7 +11,12 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { ShoppingCart, Clock } from 'lucide-react';
 import type { Product } from '@/lib/data';
 
-type LocalizedProduct = Omit<Product, 'name' | 'description' | 'longDescription'> & { name: string, description: string, longDescription: string };
+// ⭐ عدلي الـ interface ليكون متوافقاً مع التعديلات
+interface LocalizedProduct extends Product {
+  displayName?: string;
+  displayDescription?: string;
+  displayLongDescription?: string;
+}
 
 interface DealPopupProps {
   isOpen: boolean;

@@ -44,12 +44,13 @@ export default function Home() {
   const localizedProducts = useMemo(() => {
     return products.map((product) => ({
       ...product,
+      // استخدمي النص مباشرة مع الاحتفاظ بالكائن الأصلي
       name: product.name[language] || product.name.ar,
       description: product.description[language] || product.description.ar,
-      longDescription:
-        product.longDescription?.[language] ||
-        product.longDescription?.ar ||
-        '',
+      longDescription: product.longDescription?.[language] || product.longDescription?.ar || '',
+      // احتفظي بالكائن الأصلي كخاصية منفصلة
+      originalName: product.name,
+      originalDescription: product.description,
     }));
   }, [language]);
 
@@ -105,7 +106,7 @@ export default function Home() {
 
       <main className="flex-1">
         <HeroSection {...heroProps} />
-        <RecommendedProductsSection />
+        <RecommendedProductsSection products={localizedProducts} />
         <FeaturesSection />
 
         <ReviewsSection />

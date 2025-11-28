@@ -54,6 +54,31 @@
       "imageUrl": "/hana(5).jpg",
       "imageHint": "premium elixir"
     },
+        {
+      "id": "product-9",
+      "description": "Product 8 image",
+      "imageUrl": "/photo_2025-11-27_04-27-18.jpg",
+      "imageHint": "premium elixir"
+    },
+    {
+      "id": "product-10",
+      "description": "Product 8 image",
+      "imageUrl": "/photo_2025-11-27_04-41-46.jpg",
+      "imageHint": "premium elixir"
+    },
+    {
+      "id": "product-11",
+      "description": "Product 9 image",
+      "imageUrl": "/photo_2025-11-27_04-20-22.jpg",
+      "imageHint": "premium elixir"
+    },
+    {
+      "id": "product-12",
+      "description": "Product 10 image",
+      "imageUrl": "/photo_2025-11-27_04-38-32.jpg",
+      "imageHint": "premium elixir"
+    },
+
     {
       "id": "avatar-1",
       "description": "Avatar for customer review 1",

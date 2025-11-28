@@ -17,41 +17,33 @@ const ProductsSection: React.FC = () => {
   const { addToCart, setIsCartOpen } = useCart();
   const { toast } = useToast();
 
-  const handleAddToCart = (e: React.MouseEvent, product: ProductData) => {
+  // ⭐ أنشئي localizedProducts مرة واحدة واستخدميها في كل مكان
+  const localizedProducts = products.map((product) => ({
+    ...product,
+    name: product.name[language] || product.name.ar,
+    description: product.description[language] || product.description.ar,
+    longDescription: product.longDescription?.[language] || product.longDescription?.ar || '',
+  }));
+
+  const handleAddToCart = (e: React.MouseEvent, product: any) => {
     e.preventDefault(); 
     e.stopPropagation();
-    const localizedProduct = {
-      ...product,
-      name: product.name[language],
-      description: product.description[language],
-      longDescription: product.longDescription[language],
-    };
-    addToCart(localizedProduct);
+    console.log('🛒 Adding product from ProductsSection:', product.name); // للتصحيح
+    addToCart(product);
     toast({
         title: t('addToCartSuccess'),
-        description: localizedProduct.name,
+        description: product.name,
     });
     setIsCartOpen(true);
   };
   
-  const handleOrderNow = (e: React.MouseEvent, product: ProductData) => {
+  const handleOrderNow = (e: React.MouseEvent, product: any) => {
     e.preventDefault();
     e.stopPropagation();
-    const localizedProduct = {
-      ...product,
-      name: product.name[language],
-      description: product.description[language],
-      longDescription: product.longDescription[language],
-    };
-    addToCart(localizedProduct);
+    console.log('🛒 Ordering product from ProductsSection:', product.name); // للتصحيح
+    addToCart(product);
     setIsCartOpen(true);
   };
-  
-  const localizedProducts = products.map((product) => ({
-      ...product,
-      name: product.name[language] || product.name.ar,
-      description: product.description[language] || product.description.ar,
-    }));
 
   return (
     <section id="products" className="bg-secondary/20">

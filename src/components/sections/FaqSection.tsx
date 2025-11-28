@@ -14,16 +14,16 @@ const FaqSection: React.FC = () => {
     <section id="faq" className="bg-background">
       <div className="container mx-auto px-4 md:px-6">
         <div className="text-center">
-          <h2 className="font-headline text-3xl md:text-4xl font-bold text-primary">
+          <h2 className="font-headline text-2xl md:text-3xl lg:text-4xl font-bold text-primary">
             {t('faqTitle')}
           </h2>
         </div>
-        <div className="mt-12 max-w-3xl mx-auto">
+        <div className="mt-8 md:mt-12 max-w-3xl mx-auto">
           <Accordion type="single" collapsible className="w-full">
             {faqs.map((faq, index) => (
               <AccordionItem key={index} value={`item-${index}`}>
-                <AccordionTrigger className="text-lg font-bold text-start">{faq.question[language]}</AccordionTrigger>
-                <AccordionContent className="text-base text-muted-foreground">
+                <AccordionTrigger className="text-base md:text-lg font-bold text-start">{faq.question[language]}</AccordionTrigger>
+                <AccordionContent className="text-sm md:text-base text-muted-foreground">
                   {faq.answer[language]}
                 </AccordionContent>
               </AccordionItem>

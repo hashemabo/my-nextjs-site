@@ -3,6 +3,25 @@
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import type { Product } from '@/lib/data';
 
+// ⭐ دالة محسنة لتحويل اسم المنتج إلى نص
+const getProductName = (name: any): string => {
+  console.log('🔍 getProductName input:', name); // للتصحيح
+  if (typeof name === 'string') return name;
+  if (name && typeof name === 'object') {
+    return name.ar || name.en || 'منتج';
+  }
+  return 'منتج';
+};
+
+// ⭐ دالة محسنة لتحويل وصف المنتج إلى نص
+const getProductDescription = (description: any): string => {
+  if (typeof description === 'string') return description;
+  if (description && typeof description === 'object') {
+    return description.ar || description.en || '';
+  }
+  return '';
+};
+
 export type CartItem = Omit<Product, 'name' | 'description' | 'longDescription'> & { 
   name: string;
   description: string;
@@ -13,7 +32,7 @@ export type CartItem = Omit<Product, 'name' | 'description' | 'longDescription'>
 interface CartContextType {
   cart: CartItem[];
   isCartOpen: boolean;
-  addToCart: (product: Omit<Product, 'name' | 'description' | 'longDescription'> & { name: string, description: string, longDescription: string }, quantity?: number) => void;
+  addToCart: (product: Product, quantity?: number) => void;
   removeFromCart: (productId: string) => void;
   updateQuantity: (productId: string, quantity: number) => void;
   clearCart: () => void;
@@ -23,14 +42,11 @@ interface CartContextType {
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const CartProvider = ({ children }: { children: ReactNode }) => {
-  // ✅ الإصلاح: تهيئة الحالة بعد التأكد من أننا في العميل
   const [cart, setCart] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isInitialized, setIsInitialized] = useState(false);
 
-  // ✅ الإصلاح: تحميل السلة من localStorage مع التحقق من البيئة
   useEffect(() => {
-    // هذا التأكد يمنع التنفيذ على الخادم
     if (typeof window !== 'undefined') {
       try {
         const savedCart = localStorage.getItem('eleganceCart');
@@ -39,18 +55,15 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
         }
       } catch (error) {
         console.error('Error loading cart from localStorage:', error);
-        // في حالة خطأ، نبدأ بسلة فارغة
         setCart([]);
       } finally {
         setIsInitialized(true);
       }
     } else {
-      // على الخادم، نضع حالة initialized مباشرة
       setIsInitialized(true);
     }
   }, []);
 
-  // ✅ الإصلاح: حفظ السلة مع معالجة الأخطاء
   useEffect(() => {
     if (typeof window !== 'undefined' && isInitialized) {
       try {
@@ -61,10 +74,18 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [cart, isInitialized]);
 
-  const addToCart = (product: Omit<Product, 'name' | 'description' | 'longDescription'> & { name: string, description: string, longDescription: string }, quantity = 1) => {
-    // ✅ منع التنفيذ إذا لم يتم التهيئة بعد
+  const addToCart = (product: Product, quantity = 1) => {
     if (!isInitialized) return;
     
+    console.log('🛒 Original product name:', product.name); // للتصحيح
+    
+    // ⭐ تحويل name و description إلى strings باستخدام الدوال المحسنة
+    const productName = getProductName(product.name);
+    const productDescription = getProductDescription(product.description);
+    const productLongDescription = getProductDescription(product.longDescription);
+
+    console.log('🛒 Converted product name:', productName); // للتصحيح
+
     setCart((prevCart) => {
       const existingItem = prevCart.find((item) => item.id === product.id);
       if (existingItem) {
@@ -72,7 +93,15 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
           item.id === product.id ? { ...item, quantity: item.quantity + quantity } : item
         );
       }
-      return [...prevCart, { ...product, quantity }];
+      const newItem = { 
+        ...product, 
+        name: productName,
+        description: productDescription,
+        longDescription: productLongDescription,
+        quantity 
+      };
+      console.log('🛒 Adding new item to cart:', newItem);
+      return [...prevCart, newItem];
     });
   };
 
@@ -95,9 +124,8 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     setCart([]);
   };
 
-  // ✅ تقديم context فقط بعد التهيئة
   const contextValue: CartContextType = {
-    cart: isInitialized ? cart : [], // خلال التهيئة، نعود بمصفوفة فارغة
+    cart: isInitialized ? cart : [],
     isCartOpen,
     addToCart,
     removeFromCart,

@@ -2,15 +2,18 @@
 
 import React, { useMemo } from 'react';
 import ProductsSection from './ProductsSection';
-import { products } from '@/lib/data';
 import { motion } from 'framer-motion';
 
-export default function RecommendedProductsSection() {
-  // 🔀 اختيار 3 منتجات عشوائية
+interface RecommendedProductsSectionProps {
+  products?: any[];
+}
+
+export default function RecommendedProductsSection({ products }: RecommendedProductsSectionProps) {
   const recommendations = useMemo(() => {
-    const shuffled = [...products].sort(() => Math.random() - 0.5);
+    const productsToUse = products || [];
+    const shuffled = [...productsToUse].sort(() => Math.random() - 0.5);
     return shuffled.slice(0, 3);
-  }, []);
+  }, [products]);
 
   const productIds = recommendations.map((p) => p.id);
 
@@ -23,6 +26,7 @@ export default function RecommendedProductsSection() {
       <ProductsSection
         title="موصى به لك"
         productIds={productIds}
+        products={products} // ⭐ مرري المنتجات المعربة
       />
     </motion.div>
   );

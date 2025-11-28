@@ -19,7 +19,6 @@ import type { Product } from '@/lib/data';
 import { dictionary } from '@/lib/dictionary';
 import { useLanguage } from '@/contexts/LanguageContext';
 
-
 type LocalizedProduct = Omit<Product, 'name' | 'description' | 'longDescription'> & { name: string, description: string, longDescription: string };
 
 interface CartSidebarProps {
@@ -41,11 +40,9 @@ const CartSidebar: React.FC<CartSidebarProps> = ({ dealProduct }) => {
   const [location, setLocation] = useState<LocationState>({ latitude: null, longitude: null });
   const [isFetchingLocation, setIsFetchingLocation] = useState(false);
 
-
   const calculateSubtotal = () => {
     return cart.reduce((sum, item) => {
        if (dealProduct && item.id === dealProduct.id) {
-        // Apply 20% discount
         return sum + (item.prices.sar * 0.8) * item.quantity;
       }
       return sum + item.prices.sar * item.quantity;
@@ -120,35 +117,49 @@ const CartSidebar: React.FC<CartSidebarProps> = ({ dealProduct }) => {
     );
   };
 
-
   const handleWhatsAppCheckout = () => {
-    // This functionality will be handled via a server-side lookup or different mechanism in a real app
-    const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '1234567890';
+    console.log('🛒 Final cart before sending:', cart); // للتصحيح النهائي
     
-    let message = `${t('appName')} - طلب جديد:\n---------------------------------\n`;
+    let message = `📦 ${t('appName')} - طلب جديد\n`;
+    message += `---------------------------------\n`;
+    
     cart.forEach(item => {
       const isDeal = dealProduct && item.id === dealProduct.id;
       const price = isDeal ? (item.prices.sar * 0.8) : item.prices.sar;
-      message += `المنتج: ${item.name} ${isDeal ? `(${t('dealOfTheDayTitle')})` : ''}\n`;
-      message += `الكمية: ${item.quantity}\n`;
-      message += `السعر: ${price.toFixed(2)} ريال\n`;
+      
+      message += `🛒 المنتج: ${item.name}\n`;
+      message += `📦 الكمية: ${item.quantity}\n`;
+      message += `💰 السعر: ${price.toFixed(2)} ريال\n`;
+      if (isDeal) {
+        message += `🎯 ${t('dealOfTheDayTitle')}\n`;
+      }
       message += `---------------------------------\n`;
     });
-    message += `الإجمالي: ${subtotalSAR.toFixed(2)} ريال`;
+    
+    message += `💰 الإجمالي: ${subtotalSAR.toFixed(2)} ريال سعودي`;
 
     const encodedMessage = encodeURIComponent(message);
     const whatsappUrl = `https://wa.me/${966572033884}?text=${encodedMessage}`;
     
-    toast({ title: t('formSuccess') });
-    window.open(whatsappUrl, '_blank');
-    clearCart();
-    setIsCartOpen(false);
+    toast({ 
+      title: 'تم تجهيز الطلب', 
+      description: 'جاري فتح الواتساب...' 
+    });
+    
+    setTimeout(() => {
+      window.open(whatsappUrl, '_blank');
+      clearCart();
+      setIsCartOpen(false);
+    }, 1000);
   };
 
   const onFormSubmit = async (values: z.infer<typeof formSchema>) => {
     const orderDetails = {
       ...values,
-      cart,
+      cart: cart.map(item => ({
+        ...item,
+        productName: item.name
+      })),
       total: subtotalSAR,
       location: location.latitude ? location : null
     };
@@ -175,10 +186,9 @@ const CartSidebar: React.FC<CartSidebarProps> = ({ dealProduct }) => {
         }
     } catch (error) {
         const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred.';
-        toast({ title: t('telegramErrorTitle'), description: errorMessage, variant: 'destructive' });
+        toast({ title: t('telegramErrorTitle'), description: errorMessage, variant: 'destructive', });
     }
   };
-
 
   return (
     <Sheet open={isCartOpen} onOpenChange={setIsCartOpen}>
@@ -341,13 +351,3 @@ const CartSidebar: React.FC<CartSidebarProps> = ({ dealProduct }) => {
 };
 
 export default CartSidebar;
-
-
-
-
-
-
-
-
-
-

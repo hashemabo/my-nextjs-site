@@ -95,16 +95,16 @@ const Header: React.FC<HeaderProps> = ({ appName, navLinks, langToggle }) => {
         isScrolled ? "bg-background/80 backdrop-blur-sm border-b" : "bg-transparent"
       }`}
     >
-      <div className="container mx-auto flex h-20 items-center justify-between px-4 md:px-6">
+      <div className="container mx-auto flex h-16 md:h-20 items-center justify-between px-4 md:px-6">
         
-        {/* ✔ شعار الموقع يرجّع للهوم فقط */}
-        <Link href="/" className="font-headline text-2xl font-bold text-primary">
+        {/* شعار الموقع يرجّع للهوم فقط */}
+        <Link href="/" className="font-headline text-xl md:text-2xl font-bold text-primary">
           {appName}
         </Link>
 
         <div className="hidden md:flex items-center gap-2">
           <NavLinks />
-          <Button variant="outline" size="icon" className="relative" onClick={() => setIsCartOpen(true)}>
+          <Button variant="outline" size="icon" className="relative h-10 w-10" onClick={() => setIsCartOpen(true)}>
             <ShoppingCart className="h-5 w-5" />
             {totalItems > 0 && (
               <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs text-primary-foreground">
@@ -114,12 +114,12 @@ const Header: React.FC<HeaderProps> = ({ appName, navLinks, langToggle }) => {
           </Button>
         </div>
 
-        {/* 📱 موبايل */}
+        {/* موبايل */}
         <div className="md:hidden flex items-center gap-2">
-          <Button variant="outline" size="icon" className="relative" onClick={() => setIsCartOpen(true)}>
-            <ShoppingCart className="h-5 w-5" />
+          <Button variant="outline" size="icon" className="relative h-9 w-9" onClick={() => setIsCartOpen(true)}>
+            <ShoppingCart className="h-4 w-4" />
             {totalItems > 0 && (
-              <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs text-primary-foreground">
+              <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-xs text-primary-foreground">
                 {totalItems}
               </span>
             )}
@@ -127,8 +127,8 @@ const Header: React.FC<HeaderProps> = ({ appName, navLinks, langToggle }) => {
 
           <Sheet>
             <SheetTrigger asChild>
-              <Button variant="outline" size="icon">
-                <Menu className="h-6 w-6" />
+              <Button variant="outline" size="icon" className="h-9 w-9">
+                <Menu className="h-5 w-5" />
               </Button>
             </SheetTrigger>
 
