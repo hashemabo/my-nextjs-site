@@ -170,14 +170,7 @@ export default function Home() {
         <HeroSection {...heroProps} />
         
         {/* ✅ قسم المنتجات الموصى بها (3 منتجات عشوائية) */}
-        <RecommendedProductsSection 
-          products={localizedProducts}
-          onAddToCart={handleAddToCart}
-          onIncreaseQuantity={handleIncreaseQuantity}
-          onDecreaseQuantity={handleDecreaseQuantity}
-          getProductQuantity={getProductQuantity}
-        />
-
+        
         {/* ✅ قسم جميع المنتجات */}
         <AllProductsSection 
           products={localizedProducts}

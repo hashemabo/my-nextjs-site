@@ -306,7 +306,7 @@ const CartSidebar: React.FC<CartSidebarProps> = ({ dealProduct }) => {
 
   return (
     <Sheet open={isCartOpen} onOpenChange={setIsCartOpen}>
-      <SheetContent className="p-0 sm:max-w-lg">
+      <SheetContent className="p-0 w-[95%] max-w-[380px] mx-auto sm:max-w-lg">
         <SheetHeader className="px-6 pt-6 pb-4 border-b">
           <SheetTitle>{t('cartTitle')} ({cart.reduce((s, i) => s + i.quantity, 0)})</SheetTitle>
         </SheetHeader>
@@ -375,7 +375,7 @@ const CartSidebar: React.FC<CartSidebarProps> = ({ dealProduct }) => {
                 </div>
             </ScrollArea>
             
-            <div className="flex-shrink-0 border-t bg-background">
+            <div className="flex-shrink-0 border-t bg-background px-2 sm:px-6">
                <div className="px-6 py-4">
                     <div className="flex justify-between font-bold text-lg mb-4">
                       <span>{t('cartSubtotal')}</span>
