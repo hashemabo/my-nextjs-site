@@ -3,40 +3,36 @@
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import type { Product } from '@/lib/data';
 
-// ⭐ دالة محسنة لتحويل اسم المنتج إلى نص
-const getProductName = (name: any): string => {
-  console.log('🔍 getProductName input:', name); // للتصحيح
-  if (typeof name === 'string') return name;
-  if (name && typeof name === 'object') {
-    return name.ar || name.en || 'منتج';
-  }
-  return 'منتج';
-};
-
-// ⭐ دالة محسنة لتحويل وصف المنتج إلى نص
-const getProductDescription = (description: any): string => {
-  if (typeof description === 'string') return description;
-  if (description && typeof description === 'object') {
-    return description.ar || description.en || '';
-  }
-  return '';
-};
-
-export type CartItem = Omit<Product, 'name' | 'description' | 'longDescription'> & { 
+export type LocalizedProduct = Omit<Product, 'name' | 'description' | 'longDescription'> & { 
   name: string;
   description: string;
   longDescription: string;
+};
+
+export type CartItem = LocalizedProduct & {
   quantity: number;
+  selectedPrice?: number;
+  selectedCurrency?: string;
 };
 
 interface CartContextType {
   cart: CartItem[];
   isCartOpen: boolean;
-  addToCart: (product: Product, quantity?: number) => void;
+  addToCart: (product: LocalizedProduct, quantity?: number, selectedCurrency?: string) => void;
   removeFromCart: (productId: string) => void;
   updateQuantity: (productId: string, quantity: number) => void;
   clearCart: () => void;
   setIsCartOpen: (isOpen: boolean) => void;
+  getOrderData: () => {
+    items: Array<{
+      name: string;
+      quantity: number;
+      price: number;
+      currency: string;
+    }>;
+    total: number;
+    currency: string;
+  };
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -51,7 +47,8 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
       try {
         const savedCart = localStorage.getItem('eleganceCart');
         if (savedCart) {
-          setCart(JSON.parse(savedCart));
+          const parsedCart = JSON.parse(savedCart);
+          setCart(Array.isArray(parsedCart) ? parsedCart : []);
         }
       } catch (error) {
         console.error('Error loading cart from localStorage:', error);
@@ -74,34 +71,36 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [cart, isInitialized]);
 
-  const addToCart = (product: Product, quantity = 1) => {
+  const addToCart = (
+    product: LocalizedProduct, 
+    quantity = 1, 
+    selectedCurrency = 'sar'
+  ) => {
     if (!isInitialized) return;
     
-    console.log('🛒 Original product name:', product.name); // للتصحيح
-    
-    // ⭐ تحويل name و description إلى strings باستخدام الدوال المحسنة
-    const productName = getProductName(product.name);
-    const productDescription = getProductDescription(product.description);
-    const productLongDescription = getProductDescription(product.longDescription);
-
-    console.log('🛒 Converted product name:', productName); // للتصحيح
-
     setCart((prevCart) => {
       const existingItem = prevCart.find((item) => item.id === product.id);
+      
       if (existingItem) {
         return prevCart.map((item) =>
-          item.id === product.id ? { ...item, quantity: item.quantity + quantity } : item
+          item.id === product.id 
+            ? { 
+                ...item, 
+                quantity: item.quantity + quantity,
+                selectedCurrency: selectedCurrency || item.selectedCurrency
+              } 
+            : item
         );
       }
-      const newItem = { 
+      
+      const selectedPrice = product.prices?.[selectedCurrency as keyof typeof product.prices] || 0;
+      
+      return [...prevCart, { 
         ...product, 
-        name: productName,
-        description: productDescription,
-        longDescription: productLongDescription,
-        quantity 
-      };
-      console.log('🛒 Adding new item to cart:', newItem);
-      return [...prevCart, newItem];
+        quantity,
+        selectedPrice,
+        selectedCurrency
+      }];
     });
   };
 
@@ -124,6 +123,35 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     setCart([]);
   };
 
+  // ✅ إضافة دالة getOrderData المفقودة
+  const getOrderData = () => {
+    if (!isInitialized || cart.length === 0) {
+      return { items: [], total: 0, currency: 'sar' };
+    }
+
+    const currency = cart[0]?.selectedCurrency || 'sar';
+    
+    const items = cart.map(item => {
+      const productName = item.name || 'منتج بدون اسم';
+      const price = item.selectedPrice || item.prices?.[currency as keyof typeof item.prices] || 0;
+      
+      return {
+        name: productName,
+        quantity: item.quantity,
+        price: price,
+        currency: item.selectedCurrency || currency
+      };
+    });
+
+    const total = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+    return { 
+      items, 
+      total, 
+      currency
+    };
+  };
+
   const contextValue: CartContextType = {
     cart: isInitialized ? cart : [],
     isCartOpen,
@@ -131,7 +159,8 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     removeFromCart,
     updateQuantity,
     clearCart,
-    setIsCartOpen
+    setIsCartOpen,
+    getOrderData // ✅ إضافة الدالة هنا
   };
 
   return (

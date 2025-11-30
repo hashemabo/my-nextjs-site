@@ -13,7 +13,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useCart } from '@/contexts/CartContext';
-import { Minus, Plus, Trash2, ShoppingCart, Send, MessageCircle, MapPin } from 'lucide-react';
+import { Minus, Plus, Trash2, ShoppingCart, MessageCircle, MapPin, Send } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import type { Product } from '@/lib/data';
 import { dictionary } from '@/lib/dictionary';
@@ -33,10 +33,10 @@ interface LocationState {
 const saudiPhoneRegex = /^(05|5)(5|0|3|6|4|9|8|7)([0-9]{7})$/;
 
 const CartSidebar: React.FC<CartSidebarProps> = ({ dealProduct }) => {
-  const { cart, isCartOpen, setIsCartOpen, updateQuantity, removeFromCart, clearCart } = useCart();
+  const { cart, isCartOpen, setIsCartOpen, updateQuantity, removeFromCart, clearCart, getOrderData } = useCart();
   const { language } = useLanguage();
   const { toast } = useToast();
-  const t = (key: keyof typeof dictionary) => dictionary[key][language];
+  const t = (key: keyof typeof dictionary) => dictionary[key]?.[language] || key;
   const [location, setLocation] = useState<LocationState>({ latitude: null, longitude: null });
   const [isFetchingLocation, setIsFetchingLocation] = useState(false);
 
@@ -118,48 +118,85 @@ const CartSidebar: React.FC<CartSidebarProps> = ({ dealProduct }) => {
   };
 
   const handleWhatsAppCheckout = () => {
-    console.log('🛒 Final cart before sending:', cart); // للتصحيح النهائي
-    
-    let message = `📦 ${t('appName')} - طلب جديد\n`;
-    message += `---------------------------------\n`;
-    
-    cart.forEach(item => {
-      const isDeal = dealProduct && item.id === dealProduct.id;
-      const price = isDeal ? (item.prices.sar * 0.8) : item.prices.sar;
-      
-      message += `🛒 المنتج: ${item.name}\n`;
-      message += `📦 الكمية: ${item.quantity}\n`;
-      message += `💰 السعر: ${price.toFixed(2)} ريال\n`;
-      if (isDeal) {
-        message += `🎯 ${t('dealOfTheDayTitle')}\n`;
-      }
-      message += `---------------------------------\n`;
-    });
-    
-    message += `💰 الإجمالي: ${subtotalSAR.toFixed(2)} ريال سعودي`;
+    const WHATSAPP_NUMBER = "966572033884";
 
-    const encodedMessage = encodeURIComponent(message);
-    const whatsappUrl = `https://wa.me/${966572033884}?text=${encodedMessage}`;
+    // ✅ التحقق من وجود الدالة قبل استخدامها
+    if (!getOrderData || typeof getOrderData !== 'function') {
+      toast({
+        title: 'خطأ في النظام',
+        description: 'يرجى تحديث الصفحة والمحاولة مرة أخرى',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    const orderData = getOrderData();
     
-    toast({ 
-      title: 'تم تجهيز الطلب', 
-      description: 'جاري فتح الواتساب...' 
+    if (orderData.items.length === 0) {
+      toast({ 
+        title: "السلة فارغة", 
+        description: "أضف منتجات إلى السلة قبل إرسال الطلب",
+        variant: "destructive" 
+      });
+      return;
+    }
+
+    const values = form.getValues();
+
+    if (!values.name || !values.phone || !values.address) {
+      toast({
+        title: "الرجاء تعبئة جميع بيانات الطلب",
+        description: "يجب تعبئة الاسم، الهاتف، والعنوان",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    let message = `🛒 *طلب جديد من متجر قوة الصقر*\n\n`;
+    message += `👤 *معلومات العميل:*\n`;
+    message += `   📋 الاسم: ${values.name}\n`;
+    message += `   📞 الهاتف: ${values.phone}\n`;
+    message += `   📍 العنوان: ${values.address}\n`;
+    if (values.notes) {
+      message += `   📝 الملاحظات: ${values.notes}\n`;
+    }
+    if (location.latitude) {
+      message += `   🗺️ الموقع: ${location.latitude}, ${location.longitude}\n`;
+    }
+    message += `\n`;
+    
+    message += `📦 *المنتجات المطلوبة:*\n`;
+    message += `────────────────────\n`;
+
+    orderData.items.forEach((item) => {
+      message += `   🏷️ ${item.name}\n`;
+      message += `   📊 الكمية: ${item.quantity}\n`;
+      message += `   💰 السعر: ${item.price.toFixed(2)} ${item.currency.toUpperCase()}\n`;
+      message += `   💵 الإجمالي: ${(item.price * item.quantity).toFixed(2)} ${item.currency.toUpperCase()}\n`;
+      message += `────────────────────\n`;
     });
-    
+
+    message += `\n`;
+    message += `💰 *المجموع النهائي: ${orderData.total.toFixed(2)} ${orderData.currency.toUpperCase()}*\n\n`;
+    message += `🕒 ${new Date().toLocaleString('ar-SA')}`;
+
+    const encoded = encodeURIComponent(message);
+    const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encoded}`;
+
+    window.open(url, "_blank");
+
     setTimeout(() => {
-      window.open(whatsappUrl, '_blank');
       clearCart();
       setIsCartOpen(false);
+      form.reset();
+      setLocation({ latitude: null, longitude: null });
     }, 1000);
   };
 
   const onFormSubmit = async (values: z.infer<typeof formSchema>) => {
     const orderDetails = {
       ...values,
-      cart: cart.map(item => ({
-        ...item,
-        productName: item.name
-      })),
+      cart,
       total: subtotalSAR,
       location: location.latitude ? location : null
     };
@@ -186,9 +223,86 @@ const CartSidebar: React.FC<CartSidebarProps> = ({ dealProduct }) => {
         }
     } catch (error) {
         const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred.';
-        toast({ title: t('telegramErrorTitle'), description: errorMessage, variant: 'destructive', });
+        toast({ title: t('telegramErrorTitle'), description: errorMessage, variant: 'destructive' });
     }
   };
+
+  // ✅ دالة زيادة الكمية
+  const handleIncreaseQuantity = (productId: string) => {
+    const item = cart.find(item => item.id === productId);
+    if (item) {
+      updateQuantity(productId, item.quantity + 1);
+    }
+  };
+
+  // ✅ دالة تقليل الكمية
+  const handleDecreaseQuantity = (productId: string) => {
+    const item = cart.find(item => item.id === productId);
+    if (item) {
+      if (item.quantity > 1) {
+        updateQuantity(productId, item.quantity - 1);
+      } else {
+        removeFromCart(productId);
+        toast({
+          title: t("removeFromCartSuccess"),
+          description: t("productRemovedFromCart"),
+        });
+      }
+    }
+  };
+
+  // ✅ مكون النموذج المشترك
+  const OrderForm = () => (
+    <Form {...form}>
+      <div className="space-y-4 pt-4">
+        <FormField name="name" control={form.control} render={({ field }) => (
+          <FormItem>
+            <FormLabel>{t('formName')}</FormLabel>
+            <FormControl><Input placeholder={t('formNamePlaceholder')} {...field} /></FormControl>
+            <FormMessage />
+          </FormItem>
+        )} />
+        
+        <FormField name="address" control={form.control} render={({ field }) => (
+          <FormItem>
+            <FormLabel>{t('formAddress')}</FormLabel>
+            <FormControl><Textarea placeholder={t('formAddressPlaceholder')} {...field} /></FormControl>
+            <FormMessage />
+          </FormItem>
+        )} />
+         
+         <FormField name="phone" control={form.control} render={({ field }) => (
+          <FormItem>
+            <FormLabel>{t('formPhone')}</FormLabel>
+            <FormControl><Input type="tel" placeholder={t('formPhonePlaceholder')} {...field} /></FormControl>
+             <FormMessage />
+          </FormItem>
+        )} />
+         
+         <FormField name="notes" control={form.control} render={({ field }) => (
+          <FormItem>
+            <FormLabel>{t('formNotes')}</FormLabel>
+            <FormControl><Textarea placeholder={t('formNotesPlaceholder')} {...field} /></FormControl>
+          </FormItem>
+        )} />
+        
+        <Button
+          type="button"
+          variant={location.latitude ? "secondary" : "outline"}
+          className="w-full"
+          onClick={handleGetLocation}
+          disabled={isFetchingLocation}
+        >
+          <MapPin className="me-2" />
+          {isFetchingLocation
+            ? 'جاري تحديد الموقع...'
+            : location.latitude
+            ? 'تم تحديد الموقع بنجاح'
+            : 'تحديد الموقع الحالي'}
+        </Button>
+      </div>
+    </Form>
+  );
 
   return (
     <Sheet open={isCartOpen} onOpenChange={setIsCartOpen}>
@@ -233,7 +347,7 @@ const CartSidebar: React.FC<CartSidebarProps> = ({ dealProduct }) => {
                             variant="outline"
                             size="icon"
                             className="h-7 w-7"
-                            onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                            onClick={() => handleDecreaseQuantity(item.id)}
                           >
                             <Minus className="h-4 w-4" />
                           </Button>
@@ -242,7 +356,7 @@ const CartSidebar: React.FC<CartSidebarProps> = ({ dealProduct }) => {
                             variant="outline"
                             size="icon"
                             className="h-7 w-7"
-                            onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                            onClick={() => handleIncreaseQuantity(item.id)}
                           >
                             <Plus className="h-4 w-4" />
                           </Button>
@@ -269,72 +383,37 @@ const CartSidebar: React.FC<CartSidebarProps> = ({ dealProduct }) => {
                     </div>
                 </div>
 
-                <Tabs defaultValue="form" className="w-full px-6 pb-6">
+                <Tabs defaultValue="whatsapp" className="w-full px-6 pb-6">
                   <TabsList className="grid w-full grid-cols-2">
-                    <TabsTrigger value="form">{t('checkoutFormTab')}</TabsTrigger>
                     <TabsTrigger value="whatsapp">{t('checkoutWhatsAppTab')}</TabsTrigger>
+                    <TabsTrigger value="form">{t('checkoutFormTab')}</TabsTrigger>
                   </TabsList>
-                  <TabsContent value="form">
-                    <Form {...form}>
-                      <form onSubmit={form.handleSubmit(onFormSubmit)} className="space-y-4 pt-4">
-                        <FormField name="name" control={form.control} render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>{t('formName')}</FormLabel>
-                            <FormControl><Input placeholder={t('formNamePlaceholder')} {...field} /></FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )} />
-                        <FormField name="address" control={form.control} render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>{t('formAddress')}</FormLabel>
-                            <FormControl><Textarea placeholder={t('formAddressPlaceholder')} {...field} /></FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )} />
-                         <FormField name="phone" control={form.control} render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>{t('formPhone')}</FormLabel>
-                            <FormControl><Input type="tel" placeholder={t('formPhonePlaceholder')} {...field} /></FormControl>
-                             <FormMessage />
-                          </FormItem>
-                        )} />
-                         <FormField name="notes" control={form.control} render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>{t('formNotes')}</FormLabel>
-                            <FormControl><Textarea placeholder={t('formNotesPlaceholder')} {...field} /></FormControl>
-                          </FormItem>
-                        )} />
-                        
-                        <Button
-                          type="button"
-                          variant={location.latitude ? "secondary" : "outline"}
-                          className="w-full"
-                          onClick={handleGetLocation}
-                          disabled={isFetchingLocation}
-                        >
-                          <MapPin className="me-2" />
-                          {isFetchingLocation
-                            ? 'جاري تحديد الموقع...'
-                            : location.latitude
-                            ? 'تم تحديد الموقع بنجاح'
-                            : 'تحديد الموقع الحالي'}
-                        </Button>
-
-                        <Button type="submit" className="w-full text-lg py-6" disabled={form.formState.isSubmitting}>
-                          <Send className="me-2" />
-                          {form.formState.isSubmitting ? t('formSubmitting') : t('formSubmitDirect')}
-                        </Button>
-                      </form>
-                    </Form>
+                  
+                  <TabsContent value="whatsapp">
+                    <OrderForm />
+                    <div className="pt-4">
+                      <Button onClick={handleWhatsAppCheckout} className="w-full text-lg py-6 bg-green-600 hover:bg-green-700">
+                        <MessageCircle className="me-2" />
+                        {t('cartWhatsApp')}
+                      </Button>
+                      <p className="text-sm text-muted-foreground text-center mt-2">
+                        {t('cartWhatsAppDescription')}
+                      </p>
+                    </div>
                   </TabsContent>
-                   <TabsContent value="whatsapp">
-                      <div className="pt-4 text-center">
-                        <p className="text-sm text-muted-foreground mb-4">{t('cartWhatsAppDescription')}</p>
-                        <Button onClick={handleWhatsAppCheckout} className="w-full text-lg py-6">
-                          <MessageCircle className="me-2" />
-                          {t('cartWhatsApp')}
-                        </Button>
-                      </div>
+                  
+                  <TabsContent value="form">
+                    <OrderForm />
+                    <div className="pt-4">
+                      <Button 
+                        onClick={form.handleSubmit(onFormSubmit)} 
+                        className="w-full text-lg py-6" 
+                        disabled={form.formState.isSubmitting}
+                      >
+                        <Send className="me-2" />
+                        {form.formState.isSubmitting ? t('formSubmitting') : t('formSubmitDirect')}
+                      </Button>
+                    </div>
                   </TabsContent>
                 </Tabs>
             </div>

@@ -65,6 +65,31 @@ export const dictionary = {
     en: 'Product added to cart!',
     ar: 'تمت إضافة المنتج إلى السلة!',
   },
+  // ✅ الترجمات الجديدة المضافة
+  removeFromCartSuccess: {
+    en: 'Removed from cart',
+    ar: 'تم الحذف من السلة'
+  },
+  productRemovedFromCart: {
+    en: 'Product has been removed from your cart',
+    ar: 'تم إزالة المنتج من سلة التسوق'
+  },
+  addToFavorites: {
+    en: 'Add to Favorites',
+    ar: 'إضافة إلى المفضلة',
+  },
+  removeFromFavorites: {
+    en: 'Remove from Favorites',
+    ar: 'إزالة من المفضلة',
+  },
+  addToFavoritesDesc: {
+    en: 'Product added to your favorites',
+    ar: 'تمت إضافة المنتج إلى المفضلة',
+  },
+  removeFromFavoritesDesc: {
+    en: 'Product removed from your favorites',
+    ar: 'تمت إزالة المنتج من المفضلة',
+  },
   favoritesAdd: {
       en: 'Added to favorites!',
       ar: 'تمت الإضافة إلى المفضلة!',
@@ -81,10 +106,67 @@ export const dictionary = {
     en: 'Trusted by Gentlemen Across the Gulf',
     ar: 'يثق بنا السادة في جميع أنحاء الخليج',
   },
-  faqTitle: {
-    en: 'Frequently Asked Questions',
-    ar: 'الأسئلة الشائعة',
-  },
+faqTitle: {
+  en: 'Frequently Asked Questions',
+  ar: 'الأسئلة الشائعة',
+},
+// ✅ إضافة الأسئلة الشائعة الجديدة
+faqShippingPrivacy: {
+  en: 'How discreet is the shipping?',
+  ar: 'ما مدى سرية الشحن؟'
+},
+faqShippingPrivacyAnswer: {
+  en: 'We guarantee 100% discreet shipping. All orders are packaged in plain, unmarked boxes with no indication of the contents. Your privacy is our top priority, and no one will know what\'s inside your package.',
+  ar: 'نضمن شحنًا سريًا بنسبة 100%. جميع الطلبات تُعبأ في صناديق عادية غير مميزة بدون أي إشارة للمحتويات. خصوصيتك هي أولويتنا القصوى، ولن يعرف أحد ما بداخل طردك.'
+},
+faqShippingCountries: {
+  en: 'Which countries do you ship to?',
+  ar: 'إلى أي دول تقومون بالشحن؟'
+},
+faqShippingCountriesAnswer: {
+  en: 'We currently ship to all GCC countries: Saudi Arabia, United Arab Emirates, Kuwait, Qatar, Bahrain, and Oman. Shipping is free for all orders and delivery takes 24-48 hours within the GCC.',
+  ar: 'نقوم حالياً بالشحن لجميع دول الخليج: المملكة العربية السعودية، الإمارات العربية المتحدة، الكويت، قطر، البحرين، وسلطنة عمان. الشحن مجاني لجميع الطلبات والتوصيل يستغرق 24-48 ساعة داخل الخليج.'
+},
+faqProductAuthenticity: {
+  en: 'Are the products authentic?',
+  ar: 'هل المنتجات أصلية؟'
+},
+faqProductAuthenticityAnswer: {
+  en: 'Yes, all our products are 100% authentic and sourced directly from official manufacturers. Each product undergoes quality testing to ensure effectiveness and safety. We guarantee the authenticity of every item we sell.',
+  ar: 'نعم، جميع منتجاتنا أصلية 100% وموردة مباشرة من الشركات المصنعة الرسمية. كل منتج يخضع لاختبارات الجودة لضمان الفعالية والسلامة. نضمن أصالة كل عنصر نبيعه.'
+},
+faqHowToOrder: {
+  en: 'How do I place an order?',
+  ar: 'كيف يمكنني تقديم طلب؟'
+},
+faqHowToOrderAnswer: {
+  en: 'Ordering is simple: 1) Add products to your cart, 2) Fill in your details (name, phone, address), 3) Choose your preferred payment method, 4) Complete the order via WhatsApp or the order form. Our team will contact you to confirm your order.',
+  ar: 'الطلب سهل جداً: 1) أضف المنتجات إلى سلة التسوق، 2) املأ بياناتك (الاسم، الهاتف، العنوان)، 3) اختر طريقة الدفع المفضلة، 4) أكمل الطلب عبر الواتساب أو نموذج الطلب. فريقنا سيتواصل معك لتأكيد طلبك.'
+},
+faqPaymentMethods: {
+  en: 'What payment methods do you accept?',
+  ar: 'ما هي طرق الدفع المتاحة؟'
+},
+faqPaymentMethodsAnswer: {
+  en: 'We accept cash on delivery (COD) for all GCC countries. You pay only when you receive your order. We also accept bank transfers for advance payments if preferred.',
+  ar: 'نقبل الدفع نقداً عند الاستلام لجميع دول الخليج. تدفع فقط عند استلام طلبك. كما نقبل التحويلات البنكية للدفعات المقدمة إذا فضلت.'
+},
+faqDeliveryTime: {
+  en: 'How long does delivery take?',
+  ar: 'كم تستغرق مدة التوصيل؟'
+},
+faqDeliveryTimeAnswer: {
+  en: 'Delivery takes 24-48 hours within GCC countries. Orders placed before 2 PM are processed the same day. We provide tracking information so you can follow your order.',
+  ar: 'مدة التوصيل 24-48 ساعة داخل دول الخليج. الطلبات المقدمة قبل الساعة 2 ظهراً تُعالج في نفس اليوم. نقدم معلومات التتبع حتى تتمكن من متابعة طلبك.'
+},
+faqReturns: {
+  en: 'What is your return policy?',
+  ar: 'ما هي سياسة الإرجاع؟'
+},
+faqReturnsAnswer: {
+  en: 'We offer a 14-day money-back guarantee. If you\'re not satisfied with your purchase, you can return the product within 14 days for a full refund. The product must be unopened and in its original packaging.',
+  ar: 'نقدم ضمان استرجاع لمدة 14 يوم. إذا لم تكن راضياً عن شرائك، يمكنك إرجاع المنتج خلال 14 يوم لاسترداد المبلغ بالكامل. يجب أن يكون المنتج غير مفتوح وفي تغليفه الأصلي.'
+},
   guaranteeTitle: {
     en: '100% Satisfaction Guaranteed',
     ar: 'رضاك مضمون 100%',
@@ -125,7 +207,7 @@ export const dictionary = {
     en: 'e.g., 501234567',
     ar: 'مثال: 501234567',
   },
-    formNotes: {
+  formNotes: {
     en: 'Notes',
     ar: 'ملاحظات',
   },
@@ -262,5 +344,34 @@ export const dictionary = {
   legal: {
     en: 'Terms & Conditions',
     ar: 'الشروط والأحكام',
+  },
+  // ✅ الترجمات الإضافية للكميات
+  inCart: {
+    en: 'in cart',
+    ar: 'في السلة',
+  },
+  quantity: {
+    en: 'Quantity',
+    ar: 'الكمية',
+  },
+  total: {
+    en: 'Total',
+    ar: 'الإجمالي',
+  },
+  items: {
+    en: 'items',
+    ar: 'منتجات',
+  },
+  shoppingCart: {
+    en: 'Shopping Cart',
+    ar: 'سلة التسوق',
+  },
+  optional: {
+    en: 'Optional',
+    ar: 'اختياري',
+  },
+  sendWhatsAppOrder: {
+    en: 'Send Order via WhatsApp',
+    ar: 'إرسال الطلب عبر واتساب'
   }
 };
